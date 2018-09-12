@@ -12,6 +12,8 @@ namespace TaskList.Models
     public Item (string description)
     {
       _description = description;
+      _instances.Add(this);
+      _id = _instances.Count;
     }
 
 
@@ -39,11 +41,11 @@ namespace TaskList.Models
     }
 
 
-    public void Save()
-    {
-      _instances.Add(this);
-      _id = _instances.Count;
-    }
+    // public void Save()
+    // {
+    //   _instances.Add(this);
+    //   _id = _instances.Count;
+    // }
 
 
     public static void ClearAll()
