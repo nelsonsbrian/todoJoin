@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
-// using TaskList.Models;
 
-namespace TaskList.Controllers
+
+namespace ToDoList.Controllers
 {
     public class HomeController : Controller
     {
