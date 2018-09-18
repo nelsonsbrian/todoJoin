@@ -11,12 +11,30 @@ namespace ToDoList.Models
     private int _id;
     private string _description;
     private int _categoryId;
+    private DateTime _duedate;
+
+    public Item(string Description, int CategoryId, DateTime Duedate)
+    {
+      _id = 0;
+      _description = Description;
+      _categoryId = CategoryId;
+      _duedate = Duedate;
+    }
+
+    public Item(string Description, int Id, int CategoryId, DateTime Duedate)
+    {
+      _id = Id;
+      _description = Description;
+      _categoryId = CategoryId;
+      _duedate = Duedate;
+    }
 
     public Item(string Description, int CategoryId)
     {
       _id = 0;
       _description = Description;
       _categoryId = CategoryId;
+      _duedate = null;
     }
 
     public Item(string Description, int Id, int CategoryId)
@@ -24,6 +42,7 @@ namespace ToDoList.Models
       _id = Id;
       _description = Description;
       _categoryId = CategoryId;
+      _duedate = null;
     }
 
     public override bool Equals(System.Object otherItem)
@@ -68,6 +87,13 @@ namespace ToDoList.Models
         int itemId = rdr.GetInt32(0);
         string itemDescription = rdr.GetString(1);
         int itemCategoryId = rdr.GetInt32(2);
+
+        //check duedate has null value or not
+
+        //if it isn't null,
+
+
+
         Item newItem = new Item(itemDescription, itemId, itemCategoryId);
         allItems.Add(newItem);
       }

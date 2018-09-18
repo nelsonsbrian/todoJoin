@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using ToDoList.Models;
 using System.Collections.Generic;
+using System;
 
 namespace ToDoList.Controllers
 {
@@ -35,14 +36,27 @@ namespace ToDoList.Controllers
     {
       int categoryId = int.Parse(Request.Form["categoryId"]);
       string itemDescription = Request.Form["itemDescription"];
-      Dictionary<string, object> model = new Dictionary<string, object>();
-      Category foundCategory = Category.Find(categoryId);
-      Item newItem = new Item(itemDescription, categoryId);
-      newItem.Save();
-      //List<Item> categoryItems = foundCategory.GetItems();
-      model.Add("item", newItem);
-      model.Add("category", foundCategory);
-      return View("Details", model);
+      if(!Request.Form.ContainsKey("itemDueDate") || Request.Form["itemDueDate"] == "")
+      {
+        Dictionary<string, object> model = new Dictionary<string, object>();
+        Category foundCategory = Category.Find(categoryId);
+        Item newItem = new Item(itemDescription, categoryId);
+        newItem.Save();
+
+        model.Add("item", newItem);
+        model.Add("category", foundCategory);
+        return View("Details", model);
+      }
+      else
+      {
+
+      }
+
+
+      DateTime itemDueDate = DateTime.Parse(Request.Form["itemDueDate"]);
+
+
+
     }
   }
 }
