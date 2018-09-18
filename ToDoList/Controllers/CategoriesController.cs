@@ -24,6 +24,7 @@ namespace ToDoList.Controllers
     public ActionResult Create(string categoryName)
     {
         Category newCategory = new Category(categoryName);
+        newCategory.Save();
         List<Category> allCategories = Category.GetAll();
         return View("Categories", allCategories);
     }
@@ -33,26 +34,10 @@ namespace ToDoList.Controllers
     {
       Dictionary<string, object> model = new Dictionary<string, object>();
       Category selectedCategory = Category.Find(id);
-      List<Item> categoryItems = selectedCategory.Items;
+      List<Item> categoryItems = selectedCategory.GetItems();
       model.Add("category",selectedCategory);
       model.Add("items",categoryItems);
       return View(model);
     }
-
-    [HttpPost("/items")]
-    public ActionResult CreateItem()
-    {
-      int categoryId = int.Parse(Request.Form["categoryId"]);
-      string itemDescription = Request.Form["itemDescription"];
-      Dictionary<string, object> model = new Dictionary<string, object>();
-      Category foundCategory = Category.Find(categoryId);
-      Item newItem = new Item(itemDescription);
-      foundCategory.AddItem(newItem);
-      List<Item> categoryItems = foundCategory.Items;
-      model.Add("items", categoryItems);
-      model.Add("category", foundCategory);
-      return View("Details", model);
-    }
-
   }
 }
