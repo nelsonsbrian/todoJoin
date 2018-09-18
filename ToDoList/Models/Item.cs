@@ -11,12 +11,27 @@ namespace ToDoList.Models
     private int _id;
     private string _description;
 
-
     public Item(string Description, int Id = 0)
     {
       _id = Id;
       _description = Description;
     }
+
+    public override bool Equals(System.Object otherItem)
+    {
+      if (!(otherItem is Item))
+      {
+        return false;
+      }
+      else
+      {
+        Item newItem = (Item) otherItem;
+        bool descriptionEquality = (this.GetDescription() == newItem.GetDescription());
+        return (descriptionEquality);
+      }
+    }
+
+
 
     public string GetDescription() //method
     {
@@ -51,6 +66,26 @@ namespace ToDoList.Models
         conn.Dispose();
       }
       return allItems;
+    }
+
+    public void Save()
+          {
+          }
+    public static void DeleteAll()
+    {
+      MySqlConnection conn = DB.Connection();
+      conn.Open();
+
+      var cmd = conn.CreateCommand() as MySqlCommand;
+      cmd.CommandText = @"DELETE FROM items;";
+
+      cmd.ExecuteNonQuery();
+
+      conn.Close();
+      if (conn != null)
+      {
+        conn.Dispose();
+      }
     }
   }
 }
