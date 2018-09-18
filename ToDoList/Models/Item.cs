@@ -69,6 +69,11 @@ namespace ToDoList.Models
       _description = newDescription;
     }
 
+    public DateTime? GetDueDate()
+    {
+      return _duedate;
+    }
+
     public int GetId()
     {
       return _id;
@@ -80,7 +85,7 @@ namespace ToDoList.Models
       MySqlConnection conn = DB.Connection();
       conn.Open();
       MySqlCommand cmd = conn.CreateCommand() as MySqlCommand;
-      cmd.CommandText = @"SELECT * FROM items;";
+      cmd.CommandText = @"SELECT * FROM items ORDER BY duedate;";
       MySqlDataReader rdr = cmd.ExecuteReader() as MySqlDataReader;
       while(rdr.Read())
       {
