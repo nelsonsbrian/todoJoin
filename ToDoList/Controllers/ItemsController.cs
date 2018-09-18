@@ -36,27 +36,23 @@ namespace ToDoList.Controllers
     {
       int categoryId = int.Parse(Request.Form["categoryId"]);
       string itemDescription = Request.Form["itemDescription"];
+      Dictionary<string, object> model = new Dictionary<string, object>();
+      Category foundCategory = Category.Find(categoryId);
+
+      Item newItem;
       if(!Request.Form.ContainsKey("itemDueDate") || Request.Form["itemDueDate"] == "")
       {
-        Dictionary<string, object> model = new Dictionary<string, object>();
-        Category foundCategory = Category.Find(categoryId);
-        Item newItem = new Item(itemDescription, categoryId);
-        newItem.Save();
-
-        model.Add("item", newItem);
-        model.Add("category", foundCategory);
-        return View("Details", model);
+        newItem = new Item(itemDescription, categoryId);
       }
       else
       {
-
+        DateTime itemDueDate = DateTime.Parse(Request.Form["itemDueDate"]);
+        newItem = new Item(itemDescription, categoryId, itemDueDate);
       }
-
-
-      DateTime itemDueDate = DateTime.Parse(Request.Form["itemDueDate"]);
-
-
-
+      newItem.Save();
+      model.Add("item", newItem);
+      model.Add("category", foundCategory);
+      return View("Details", model);
     }
   }
 }

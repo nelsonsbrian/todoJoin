@@ -11,7 +11,7 @@ namespace ToDoList.Models
     private int _id;
     private string _description;
     private int _categoryId;
-    private DateTime _duedate;
+    private DateTime? _duedate;
 
     public Item(string Description, int CategoryId, DateTime Duedate)
     {
@@ -88,13 +88,19 @@ namespace ToDoList.Models
         string itemDescription = rdr.GetString(1);
         int itemCategoryId = rdr.GetInt32(2);
 
+        Item newItem;
         //check duedate has null value or not
-
-        //if it isn't null,
-
-
-
-        Item newItem = new Item(itemDescription, itemId, itemCategoryId);
+        if(rdr.IsDBNull(3))
+        {
+          //if current row's duedate column's value is null
+          newItem = new Item(itemDescription, itemId, itemCategoryId);
+        }
+        else
+        {
+          //if current row's duedate column's value is not null and has specific value
+          DateTime itemDueDate = rdr.GetDateTime(3);
+          newItem = new Item(itemDescription, itemId, itemCategoryId, itemDueDate);
+        }
         allItems.Add(newItem);
       }
       conn.Close();
@@ -122,7 +128,20 @@ namespace ToDoList.Models
 
       string itemDescription = rdr.GetString(1);
       int itemCategoryId = rdr.GetInt32(2);
-      Item newItem = new Item(itemDescription, searchId, itemCategoryId);
+
+      Item newItem;
+
+      if(rdr.IsDBNull(3))
+      {
+        //if current row's duedate column's value is null
+        newItem = new Item(itemDescription, searchId, itemCategoryId);
+      }
+      else
+      {
+        //if current row's duedate column's value is not null and has specific value
+        DateTime itemDueDate = rdr.GetDateTime(3);
+        newItem = new Item(itemDescription, searchId, itemCategoryId, itemDueDate);
+      }
 
       conn.Close();
       if (conn != null)
@@ -138,15 +157,38 @@ namespace ToDoList.Models
       MySqlConnection conn = DB.Connection();
       conn.Open();
       MySqlCommand cmd = conn.CreateCommand() as MySqlCommand;
-      cmd.CommandText = @"INSERT INTO items(description, category) VALUES (@description, @category);";
-      MySqlParameter parameterDescription = new MySqlParameter();
-      parameterDescription.ParameterName = "@description";
-      parameterDescription.Value = this._description;
-      cmd.Parameters.Add(parameterDescription);
-      MySqlParameter parameterCategory = new MySqlParameter();
-      parameterCategory.ParameterName = "@category";
-      parameterCategory.Value = this._categoryId;
-      cmd.Parameters.Add(parameterCategory);
+
+      if (this._duedate == null)
+      {
+        cmd.CommandText = @"INSERT INTO items(description, category) VALUES (@description, @category);";
+        MySqlParameter parameterDescription = new MySqlParameter();
+        parameterDescription.ParameterName = "@description";
+        parameterDescription.Value = this._description;
+        cmd.Parameters.Add(parameterDescription);
+        MySqlParameter parameterCategory = new MySqlParameter();
+        parameterCategory.ParameterName = "@category";
+        parameterCategory.Value = this._categoryId;
+        cmd.Parameters.Add(parameterCategory);
+      }
+      else
+      {
+        cmd.CommandText = @"INSERT INTO items(description, category, duedate) VALUES (@description, @category, @duedate);";
+
+        MySqlParameter parameterDescription = new MySqlParameter();
+        parameterDescription.ParameterName = "@description";
+        parameterDescription.Value = this._description;
+        cmd.Parameters.Add(parameterDescription);
+
+        MySqlParameter parameterCategory = new MySqlParameter();
+        parameterCategory.ParameterName = "@category";
+        parameterCategory.Value = this._categoryId;
+        cmd.Parameters.Add(parameterCategory);
+
+        MySqlParameter parameterDueDate = new MySqlParameter();
+        parameterDueDate.ParameterName = "@duedate";
+        parameterDueDate.Value = this._duedate;
+        cmd.Parameters.Add(parameterDueDate);
+      }
 
       cmd.ExecuteNonQuery();
 

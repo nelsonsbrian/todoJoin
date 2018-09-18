@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using MySql.Data.MySqlClient;
 using ToDoList;
+using System;
 
 namespace ToDoList.Models
 {
@@ -141,7 +142,19 @@ namespace ToDoList.Models
         int itemId = rdr.GetInt32(0);
         string itemDescription = rdr.GetString(1);
 
-        Item newItem = new Item(itemDescription, itemId, this.Id);
+        Item newItem;
+        if(rdr.IsDBNull(3))
+        {
+          //if current row's duedate column's value is null
+          newItem = new Item(itemDescription, itemId, this.Id);
+        }
+        else
+        {
+          //if current row's duedate column's value is not null and has specific value
+          DateTime itemDueDate = rdr.GetDateTime(3);
+          newItem = new Item(itemDescription, itemId, this.Id, itemDueDate);
+        }
+
         newItems.Add(newItem);
       }
       conn.Close();
