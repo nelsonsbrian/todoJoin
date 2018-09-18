@@ -59,6 +59,11 @@ namespace ToDoList.Models
       }
     }
 
+    public override int GetHashCode()
+    {
+     return this.GetDescription().GetHashCode();
+    }
+
     public string GetDescription() //method
     {
       return _description;

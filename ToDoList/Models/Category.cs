@@ -30,6 +30,11 @@ namespace ToDoList.Models
       }
     }
 
+    public override int GetHashCode()
+    {
+         return this.GetName().GetHashCode();
+    }
+
     public static List<Category> GetAll()
     {
       List<Category> allCategories = new List<Category> {};
