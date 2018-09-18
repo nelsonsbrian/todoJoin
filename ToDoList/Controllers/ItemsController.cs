@@ -50,9 +50,9 @@ namespace ToDoList.Controllers
         newItem = new Item(itemDescription, categoryId, itemDueDate);
       }
       newItem.Save();
-      model.Add("item", newItem);
-      model.Add("category", foundCategory);
-      return View("Details", model);
+      // model.Add("item", newItem);
+      // model.Add("category", foundCategory);
+      return RedirectToAction("Index", new {categoryId = categoryId});
     }
   }
 }

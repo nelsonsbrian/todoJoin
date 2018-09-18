@@ -11,7 +11,7 @@ namespace ToDoList.Controllers
     public ActionResult Index()
     {
         List<Category> allCategories = Category.GetAll();
-        return View("Categories",allCategories);
+        return View("Categories", allCategories);
     }
 
     [HttpGet("/categories/new")]
@@ -25,8 +25,8 @@ namespace ToDoList.Controllers
     {
         Category newCategory = new Category(categoryName);
         newCategory.Save();
-        List<Category> allCategories = Category.GetAll();
-        return View("Categories", allCategories);
+        //List<Category> allCategories = Category.GetAll();
+        return RedirectToAction("Index");
     }
 
     [HttpGet("/categories/{id}")]
