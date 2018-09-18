@@ -32,7 +32,7 @@ namespace ToDoList.Models
 
     public override int GetHashCode()
     {
-         return this.GetName().GetHashCode();
+         return this.Name.GetHashCode();
     }
 
     public static List<Category> GetAll()
