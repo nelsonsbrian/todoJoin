@@ -54,5 +54,25 @@ namespace ToDoList.Controllers
       // model.Add("category", foundCategory);
       return RedirectToAction("Index", new {categoryId = categoryId});
     }
+    [HttpGet("/items/{itemId}/update")]
+    public ActionResult UpdateForm(int itemId)
+    {
+      Item thisItem = Item.Find(itemId);
+      return View(thisItem);
+    }
+    [HttpPost("/items/{itemId}/update")]
+    public ActionResult Update(int itemId, string newDescription)
+    {
+      Item thisItem = Item.Find(itemId);
+      thisItem.Edit(newDescription);
+      return RedirectToAction("Index", new {categoryId = thisItem.GetCategoryId()});
+    }
+    [HttpPost("/items/{itemId}/delete")]
+    public ActionResult Delete(int itemId)
+    {
+      Item thisItem = Item.Find(itemId);
+      Item.Delete(itemId);
+      return RedirectToAction("Index", new {categoryId = thisItem.GetCategoryId()});
+    }
   }
 }

@@ -135,7 +135,7 @@ namespace ToDoList.Models
       MySqlConnection conn = DB.Connection();
       conn.Open();
       MySqlCommand cmd = conn.CreateCommand() as MySqlCommand;
-      cmd.CommandText = @"SELECT * FROM items WHERE category=@id ORDER BY duedate;";
+      cmd.CommandText = @"SELECT * FROM items WHERE category_id=@id ORDER BY duedate;";
       MySqlParameter parameterId = new MySqlParameter();
       parameterId.ParameterName = "@id";
       parameterId.Value = this.Id;

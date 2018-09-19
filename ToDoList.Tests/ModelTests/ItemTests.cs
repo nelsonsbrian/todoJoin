@@ -5,7 +5,6 @@ using System;
 
 namespace ToDoList.Tests
 {
-
   [TestClass]
   public class ItemTests : IDisposable
   {
@@ -15,7 +14,7 @@ namespace ToDoList.Tests
     }
     public ItemTests()
     {
-      DBConfiguration.ConnectionString = "server=localhost;user id=root;password=root;port=8889;database=todo_test;";
+      DBConfiguration.ConnectionString = "server=localhost;user id=root;password=root;port=8889;database=todo_test;Convert Zero Datetime=True";
     }
     [TestMethod]
     public void GetAll_DbStartsEmpty_0()
@@ -32,8 +31,8 @@ namespace ToDoList.Tests
     public void Equals_ReturnsTrueIfDescriptionsAreTheSame_Item()
     {
       // Arrange, Act
-      Item firstItem = new Item("Mow the lawn");
-      Item secondItem = new Item("Mow the lawn");
+      Item firstItem = new Item("Mow the lawn", 1);
+      Item secondItem = new Item("Mow the lawn", 1);
 
       // Assert
       Assert.AreEqual(firstItem, secondItem);
@@ -43,7 +42,7 @@ namespace ToDoList.Tests
     public void Save_SavesToDatabase_ItemList()
     {
       //Arrange
-      Item testItem = new Item("Mow the lawn");
+      Item testItem = new Item("Mow the lawn", 1);
 
       //Act
       testItem.Save();
@@ -52,6 +51,39 @@ namespace ToDoList.Tests
 
       //Assert
       CollectionAssert.AreEqual(testList, result);
+    }
+
+    [TestMethod]
+    public void Edit_UpdatesItemInDatabase_String()
+    {
+      //Arrange
+      string firstDescription = "Walk the dog";
+      Item testItem = new Item (firstDescription,1);
+      testItem.Save();
+
+      string secondDescription = "Mow the lawn";
+
+      //Act
+      testItem.Edit(secondDescription);
+      string result = Item.Find(testItem.GetId()).GetDescription();
+
+      //Assert
+      Assert.AreEqual(secondDescription,result);
+    }
+
+    [TestMethod]
+    public void Delete_DeleteItemInDatabase()
+    {
+      //Arrange
+      Item testItem = new Item ("Walk the dog",1);
+      testItem.Save();
+
+      //Act
+      Item.Delete(testItem.GetId());
+      int count = Category.Find(1).GetItems().Count;
+
+      //Assert
+      Assert.AreEqual(0, count);
     }
   }
 }

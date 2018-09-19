@@ -2,7 +2,7 @@
 <ul>
   @foreach (var item in Model)
   {
-    <li>@item.GetDescription() @item.GetDueDate()</li>
+    <li><a href="/categories/@item.GetCategoryId()/items/@item.GetId()">@item.GetDescription()</a> @item.GetDueDate() | <a href="/items/@item.GetId()/update">Edit</a></li>
   }
 </ul>
 <a href="/categories/{categoryId}/items/new">Add a new item.</a>
