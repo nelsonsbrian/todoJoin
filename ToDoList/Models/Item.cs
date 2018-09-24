@@ -171,16 +171,8 @@ namespace ToDoList.Models
 
       MySqlCommand cmd = conn.CreateCommand() as MySqlCommand;
       cmd.CommandText = @"INSERT INTO category_item (category_id, item_id) VALUES(@categoryId, @itemId);";
-
-      MySqlParameter parameterCategoryId = new MySqlParameter();
-      parameterCategoryId.ParameterName = "@categoryId";
-      parameterCategoryId.Value = categoryId;
-      cmd.Parameters.Add(parameterCategoryId);
-
-      MySqlParameter parameterItemId = new MySqlParameter();
-      parameterItemId.ParameterName = "@itemId";
-      parameterItemId.Value = this._id;
-      cmd.Parameters.Add(parameterItemId);
+      cmd.Parameters.AddWithValue("@categoryId", categoryId);
+      cmd.Parameters.AddWithValue("@itemId", this._id);
 
       cmd.ExecuteNonQuery();
 
@@ -250,7 +242,7 @@ namespace ToDoList.Models
 
       cmd.ExecuteNonQuery();
       this._done = true;
-      
+
       conn.Close();
       if (conn != null)
       {
@@ -268,10 +260,7 @@ namespace ToDoList.Models
 
       cmd.CommandText = @"SELECT categories.* FROM categories JOIN category_item ON (categories.id = category_item.category_id) JOIN items ON (category_item.item_id = items.id) WHERE items.id = @itemId;";
 
-      MySqlParameter itemId = new MySqlParameter();
-      itemId.ParameterName = "@itemId";
-      itemId.Value = this._id;
-      cmd.Parameters.Add(itemId);
+      cmd.Parameters.AddWithValue("@itemId", this._id);
 
       MySqlDataReader rdr = cmd.ExecuteReader() as MySqlDataReader;
 
@@ -299,19 +288,11 @@ namespace ToDoList.Models
       MySqlCommand cmd = conn.CreateCommand() as MySqlCommand;
 
       cmd.CommandText = @"DELETE FROM category_item WHERE item_id = @searchId;";
-
-      MySqlParameter searchId = new MySqlParameter();
-      searchId.ParameterName = "@searchId";
-      searchId.Value = id;
-      cmd.Parameters.Add(searchId);
+      cmd.Parameters.AddWithValue("@searchId", id);
       cmd.ExecuteNonQuery();
 
       cmd.CommandText = @"DELETE FROM items WHERE id = @searchId;";
-
-      searchId = new MySqlParameter();
-      searchId.ParameterName = "@searchId";
-      searchId.Value = id;
-      cmd.Parameters.Add(searchId);
+      cmd.Parameters.AddWithValue("@searchId", id);
       cmd.ExecuteNonQuery();
 
       conn.Close();

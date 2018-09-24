@@ -86,19 +86,11 @@ namespace ToDoList.Models
       MySqlCommand cmd = conn.CreateCommand() as MySqlCommand;
 
       cmd.CommandText = @"DELETE FROM category_item WHERE category_id = @searchId;";
-
-      MySqlParameter searchId = new MySqlParameter();
-      searchId.ParameterName = "@searchId";
-      searchId.Value = id;
-      cmd.Parameters.Add(searchId);
+      cmd.Parameters.AddWithValue("@searchId", id);
       cmd.ExecuteNonQuery();
 
       cmd.CommandText = @"DELETE FROM categories WHERE id = @searchId;";
-
-      searchId = new MySqlParameter();
-      searchId.ParameterName = "@searchId";
-      searchId.Value = id;
-      cmd.Parameters.Add(searchId);
+      cmd.Parameters.AddWithValue("@searchId", id);
       cmd.ExecuteNonQuery();
 
       conn.Close();
@@ -114,11 +106,7 @@ namespace ToDoList.Models
       conn.Open();
       MySqlCommand cmd = conn.CreateCommand() as MySqlCommand;
       cmd.CommandText = @"SELECT * FROM categories WHERE id = @searchId;";
-
-      MySqlParameter parameterId = new MySqlParameter();
-      parameterId.ParameterName = "@searchId";
-      parameterId.Value = searchId;
-      cmd.Parameters.Add(parameterId);
+      cmd.Parameters.AddWithValue("@searchId", searchId);
 
       MySqlDataReader rdr = cmd.ExecuteReader() as MySqlDataReader;
       rdr.Read();
@@ -143,17 +131,8 @@ namespace ToDoList.Models
 
       MySqlCommand cmd = conn.CreateCommand() as MySqlCommand;
       cmd.CommandText = @"INSERT INTO category_item (category_id, item_id) VALUES(@categoryId, @itemId);";
-
-      MySqlParameter parameterCategoryId = new MySqlParameter();
-      parameterCategoryId.ParameterName = "@categoryId";
-      parameterCategoryId.Value = this.Id;
-      cmd.Parameters.Add(parameterCategoryId);
-
-      MySqlParameter parameterItemId = new MySqlParameter();
-      parameterItemId.ParameterName = "@itemId";
-      parameterItemId.Value = itemId;
-      cmd.Parameters.Add(parameterItemId);
-
+      cmd.Parameters.AddWithValue("@categoryId", this.Id);
+      cmd.Parameters.AddWithValue("@itemId", itemId);
       cmd.ExecuteNonQuery();
 
       conn.Close();
@@ -170,16 +149,8 @@ namespace ToDoList.Models
 
       MySqlCommand cmd = conn.CreateCommand() as MySqlCommand;
       cmd.CommandText = @"UPDATE categories SET name = @newName WHERE id=@categoryId;";
-
-      MySqlParameter parameterNewName = new MySqlParameter() as MySqlParameter;
-      parameterNewName.ParameterName = "@newName";
-      parameterNewName.Value = newName;
-      cmd.Parameters.Add(parameterNewName);
-
-      MySqlParameter categoryId = new MySqlParameter() as MySqlParameter;
-      categoryId.ParameterName = "@categoryId";
-      categoryId.Value = this.Id;
-      cmd.Parameters.Add(categoryId);
+      cmd.Parameters.AddWithValue("@newName", newName);
+      cmd.Parameters.AddWithValue("categoryId", this.Id);
 
       cmd.ExecuteNonQuery();
       this.Name = newName;
@@ -197,11 +168,7 @@ namespace ToDoList.Models
       conn.Open();
       MySqlCommand cmd = conn.CreateCommand() as MySqlCommand;
       cmd.CommandText = @"INSERT INTO categories(name) VALUES (@name);";
-
-      MySqlParameter parameterName = new MySqlParameter();
-      parameterName.ParameterName = "@name";
-      parameterName.Value = this.Name;
-      cmd.Parameters.Add(parameterName);
+      cmd.Parameters.AddWithValue("@name", this.Name);
 
       cmd.ExecuteNonQuery();
       this.Id = (int) cmd.LastInsertedId;
@@ -219,11 +186,11 @@ namespace ToDoList.Models
       MySqlConnection conn = DB.Connection();
       conn.Open();
       MySqlCommand cmd = conn.CreateCommand() as MySqlCommand;
-      cmd.CommandText = @"SELECT items.* FROM categories JOIN category_item ON (categories.id = category_item.category_id) JOIN items ON (category_item.item_id = items.id) WHERE categories.id=@categoryId ORDER BY duedate;";
-      MySqlParameter parameterId = new MySqlParameter();
-      parameterId.ParameterName = "@categoryId";
-      parameterId.Value = this.Id;
-      cmd.Parameters.Add(parameterId);
+      cmd.CommandText = @"SELECT items.* FROM categories
+      JOIN category_item ON (categories.id = category_item.category_id)
+      JOIN items ON (category_item.item_id = items.id)
+      WHERE categories.id=@categoryId ORDER BY duedate;";
+      cmd.Parameters.AddWithValue("@categoryId", this.Id);
 
       MySqlDataReader rdr = cmd.ExecuteReader() as MySqlDataReader;
       while(rdr.Read())
