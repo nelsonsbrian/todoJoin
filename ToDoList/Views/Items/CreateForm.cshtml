@@ -1,6 +1,12 @@
 <h1>Add a new item to @Model.Name</h1>
 <form action='/items' method='post'>
-  <input id='categoryId' name='categoryId' type='hidden' value='@Model.Id'>
+  <label for='categoryId'>Select category</label>
+  <select id='categoryId' name='categoryId'>
+    @foreach (var category in @Model)
+    {
+      <option value="@category.Id">@category.Name</option>
+    }
+  </select>
   <label for='itemDescription'>Item description</label>
   <input id='itemDescription' name='itemDescription' type='text'>
   <label for='itemDueDate'>Due Date</label>

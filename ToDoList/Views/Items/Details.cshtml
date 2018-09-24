@@ -1,7 +1,13 @@
 <h1>@Model["item"].GetDescription() Detail Page</h1>
-<h3>Category: @Model["category"].Name</h3>
-<h3><a href="/items/@Model["item"].GetId()/update">Update this item</a></h3>
-<h3><a href="/categories/@Model["category"].Id/items">Back to the items page</a></h3>
-<form action="/items/@Model["item"].GetId()/delete" method="post">
-<button type="submit">Delete</button>
+<h3>Categories</h3>
+<ul>
+  @foreach (var category in @Model["categories"])
+  {
+    <li>@category.Name</li>
+  }
+</ul>
+<h3><a href='/items/@Model["item"].GetId()/update'>Update this item</a></h3>
+<h3><a href="/items">Back to the items page</a></h3>
+<form action='/items/@Model["item"].GetId()/delete' method="post">
+  <button type="submit">Delete</button>
 </form>
